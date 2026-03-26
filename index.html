@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#05080f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>SpeakFlow — 90 Day English</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05080f;--s1:#0c1220;--s2:#131c2e;--s3:#1a2540;
+  --brd:#1c2844;--brd2:#253356;
+  --t1:#eaf0ff;--t2:#8a9bc0;--t3:#5a6d94;
+  --ac:#4ade80;--ac2:#22c55e;--ac-bg:rgba(74,222,128,.08);
+  --wm:#facc15;--cr:#f87171;--bl:#60a5fa;--pr:#a78bfa;--pk:#f472b6;--tl:#2dd4bf;
+  --ff:'Instrument Sans',sans-serif;--fd:'Playfair Display',serif;
+  --r:14px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff);background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(74,222,128,.03) 0%,transparent 60%),radial-gradient(ellipse at 80% 100%,rgba(96,165,250,.02) 0%,transparent 60%);pointer-events:none;z-index:0}
+
+.app{position:relative;z-index:1;max-width:460px;margin:0 auto;min-height:100vh}
+
+/* NAV */
+.nav{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;position:sticky;top:0;z-index:200;background:rgba(5,8,15,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--brd)}
+.nav-logo{font-family:var(--fd);font-size:19px;letter-spacing:-.5px}
+.nav-logo b{color:var(--ac)}
+.nav-logo span{color:var(--t3);font-weight:400}
+.nav-right{display:flex;align-items:center;gap:10px}
+.streak-badge{display:flex;align-items:center;gap:5px;background:rgba(250,204,21,.08);padding:5px 11px;border-radius:16px;font-size:12px;font-weight:600;color:var(--wm)}
+.day-badge{font-size:11px;color:var(--t3);background:var(--s2);padding:4px 10px;border-radius:12px;font-weight:500}
+
+/* SCREENS */
+.scr{display:none;padding:18px;padding-bottom:90px;animation:fu .35s ease}
+.scr.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* HOME */
+.hero{margin-bottom:22px}
+.hero h1{font-family:var(--fd);font-size:26px;font-weight:600;line-height:1.25;margin-bottom:4px}
+.hero p{color:var(--t2);font-size:13px}
+
+.week-label{font-size:11px;text-transform:uppercase;letter-spacing:1.6px;color:var(--ac);font-weight:600;margin-bottom:6px}
+.topic-card{background:linear-gradient(135deg,var(--s1),var(--s2));border:1px solid var(--brd);border-radius:var(--r);padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
+.topic-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,.12),transparent)}
+.topic-card h2{font-size:17px;font-weight:600;margin-bottom:4px}
+.topic-card p{color:var(--t2);font-size:12.5px;line-height:1.5}
+.prog-row{display:flex;align-items:center;gap:10px;margin-top:14px}
+.prog-bar{flex:1;height:5px;background:var(--brd);border-radius:3px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:3px;transition:width .5s}
+.prog-txt{font-size:11px;color:var(--t3);white-space:nowrap}
+
+.stitle{font-size:11px;text-transform:uppercase;letter-spacing:1.6px;color:var(--t3);margin:20px 0 10px;font-weight:600}
+.lessons{display:flex;flex-direction:column;gap:8px}
+.lcard{display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--brd);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s}
+.lcard:hover{border-color:var(--ac);background:var(--ac-bg);transform:translateX(3px)}
+.lcard:active{transform:scale(.98)}
+.lico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.linfo h3{font-size:14px;font-weight:600;margin-bottom:1px}
+.linfo p{font-size:11.5px;color:var(--t2)}
+.ltime{margin-left:auto;font-size:11px;color:var(--t3);white-space:nowrap}
+.ic1{background:rgba(74,222,128,.1)}.ic2{background:rgba(96,165,250,.1)}.ic3{background:rgba(167,139,250,.1)}.ic4{background:rgba(250,204,21,.1)}.ic5{background:rgba(248,113,113,.1)}
+
+/* CHAT */
+.ch-hdr{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--brd)}
+.back{width:34px;height:34px;border-radius:9px;border:1px solid var(--brd);background:var(--s1);color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.2s}
+.back:hover{border-color:var(--ac)}
+.ch-inf h2{font-size:15px;font-weight:600}
+.ch-inf p{font-size:11.5px;color:var(--t2)}
+
+.timer-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.timer-track{flex:1;height:3px;background:var(--brd);border-radius:2px}
+.timer-fill{height:100%;background:var(--ac);border-radius:2px;transition:width 1s linear}
+.timer-txt{font-size:12px;color:var(--t3);font-variant-numeric:tabular-nums}
+
+.msgs{display:flex;flex-direction:column;gap:10px;min-height:40vh;padding-bottom:16px}
+.msg{max-width:84%;padding:12px 14px;border-radius:14px;font-size:13.5px;line-height:1.55;animation:mi .3s ease;position:relative}
+@keyframes mi{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.msg.b{align-self:flex-start;background:var(--s2);border:1px solid var(--brd);border-bottom-left-radius:3px}
+.msg.u{align-self:flex-end;background:linear-gradient(135deg,rgba(74,222,128,.13),rgba(34,197,94,.08));border:1px solid rgba(74,222,128,.18);border-bottom-right-radius:3px}
+.msg .corr{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);font-size:12.5px;color:var(--t2)}
+.msg .corr b{color:var(--ac);font-weight:600}
+.msg .wr{color:var(--cr);text-decoration:line-through}
+.msg .rt{color:var(--ac)}
+.msg .nw{display:inline;background:rgba(96,165,250,.1);color:var(--bl);padding:0 4px;border-radius:3px;font-size:12.5px;cursor:help;border-bottom:1px dashed var(--bl)}
+.msg .tr{margin-top:6px;font-size:11.5px;color:var(--t3);font-style:italic;cursor:pointer}
+
+.typ{display:flex;gap:4px;padding:12px 14px;align-self:flex-start;background:var(--s2);border:1px solid var(--brd);border-radius:14px}
+.typ span{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:td 1.2s ease infinite}
+.typ span:nth-child(2){animation-delay:.15s}
+.typ span:nth-child(3){animation-delay:.3s}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+
+.ch-input-wrap{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;padding:10px 18px 18px;background:linear-gradient(to top,var(--bg) 80%,transparent);z-index:50}
+.hints{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.hint{background:var(--s2);border:1px solid var(--brd);border-radius:16px;padding:5px 12px;font-size:11.5px;color:var(--t2);cursor:pointer;transition:.2s;font-family:var(--ff)}
+.hint:hover{border-color:var(--ac);color:var(--ac)}
+.ch-row{display:flex;gap:6px;align-items:flex-end}
+.ch-in{flex:1;background:var(--s1);border:1px solid var(--brd);border-radius:12px;padding:10px 14px;color:var(--t1);font-family:var(--ff);font-size:13.5px;resize:none;outline:none;max-height:90px;line-height:1.4;transition:.2s}
+.ch-in:focus{border-color:var(--ac)}
+.ch-in::placeholder{color:var(--t3)}
+.ibtn{width:40px;height:40px;border-radius:10px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0;font-size:15px}
+.ibtn-s{background:var(--ac);color:var(--bg)}
+.ibtn-s:hover{background:var(--ac2);transform:scale(1.05)}
+.ibtn-m{background:var(--s2);border:1px solid var(--brd);color:var(--t1)}
+.ibtn-m:hover{border-color:var(--ac)}
+.ibtn-m.rec{background:rgba(248,113,113,.12);border-color:var(--cr);color:var(--cr);animation:pls 1.5s ease infinite}
+@keyframes pls{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.3)}50%{box-shadow:0 0 0 8px rgba(248,113,113,0)}}
+
+/* AI indicator */
+.ai-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--ac);background:var(--ac-bg);padding:2px 8px;border-radius:6px;margin-bottom:6px;font-weight:600;letter-spacing:.5px}
+
+/* VOCAB */
+.vc{background:var(--s1);border:1px solid var(--brd);border-radius:var(--r);padding:28px 20px;text-align:center;margin-bottom:14px;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:.3s}
+.vc h2{font-family:var(--fd);font-size:26px;margin-bottom:6px}
+.vc .ph{color:var(--ac);font-size:13px;margin-bottom:10px}
+.vc .mn{color:var(--t2);font-size:14px;line-height:1.5}
+.vc .ex{color:var(--t3);font-size:12.5px;margin-top:10px;font-style:italic;line-height:1.5}
+.vc .th{font-size:10.5px;color:var(--t3);opacity:.5;margin-top:14px}
+.va{display:flex;gap:8px;margin-top:6px}
+.vb{flex:1;padding:12px;border-radius:10px;border:1px solid var(--brd);background:var(--s1);color:var(--t1);font-family:var(--ff);font-size:13px;font-weight:600;cursor:pointer;transition:.2s}
+.vb.k:hover{background:rgba(74,222,128,.08);border-color:var(--ac);color:var(--ac)}
+.vb.l:hover{background:rgba(96,165,250,.08);border-color:var(--bl);color:var(--bl)}
+.vcnt{text-align:center;font-size:12px;color:var(--t3);margin-top:10px}
+
+/* EXERCISE */
+.ex-pr{background:var(--s1);border:1px solid var(--brd);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.tbg{display:inline-block;padding:3px 9px;border-radius:5px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.tbg-l{background:rgba(167,139,250,.1);color:var(--pr)}
+.tbg-g{background:rgba(250,204,21,.1);color:var(--wm)}
+.tbg-s{background:rgba(248,113,113,.1);color:var(--cr)}
+.ex-pr h2{font-size:16px;margin-bottom:6px;font-weight:600}
+.ex-pr p{color:var(--t2);font-size:13px;line-height:1.5}
+.ex-opts{display:flex;flex-direction:column;gap:7px}
+.ex-o{padding:12px 14px;border-radius:10px;border:1px solid var(--brd);background:var(--s1);cursor:pointer;font-size:13px;transition:.2s;display:flex;align-items:center;gap:10px;font-family:var(--ff)}
+.ex-o:hover{border-color:var(--ac);background:var(--ac-bg)}
+.ex-o.ok{border-color:var(--ac);background:rgba(74,222,128,.08)}
+.ex-o.no{border-color:var(--cr);background:rgba(248,113,113,.08)}
+.ol{width:26px;height:26px;border-radius:7px;border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.ex-fb{padding:14px;border-radius:10px;margin-top:14px;font-size:13px;line-height:1.5;animation:fu .3s}
+.fb-ok{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.15);color:var(--ac)}
+.fb-no{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.15);color:var(--cr)}
+.bnxt{width:100%;padding:12px;margin-top:14px;background:var(--ac);color:var(--bg);border:none;border-radius:10px;font-family:var(--ff);font-size:14px;font-weight:600;cursor:pointer;transition:.2s}
+.bnxt:hover{background:var(--ac2)}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.sc{background:var(--s1);border:1px solid var(--brd);border-radius:12px;padding:16px}
+.sc .sv{font-family:var(--fd);font-size:26px;font-weight:600}
+.sc .sl{font-size:11px;color:var(--t2);margin-top:3px}
+.s-ac{color:var(--ac)}.s-wm{color:var(--wm)}.s-bl{color:var(--bl)}.s-pr{color:var(--pr)}
+.wch{display:flex;align-items:flex-end;justify-content:space-between;gap:6px;height:100px;padding:16px 0}
+.wb{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.wb .br{width:100%;border-radius:5px 5px 3px 3px;background:linear-gradient(to top,rgba(74,222,128,.18),rgba(74,222,128,.35));min-height:3px;transition:height .5s}
+.wb .br.td{background:linear-gradient(to top,var(--ac2),var(--ac))}
+.wb .dy{font-size:10px;color:var(--t3)}
+
+/* PROGRAM screen */
+.week-block{margin-bottom:20px}
+.week-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 0;cursor:pointer}
+.week-hdr h3{font-size:14px;font-weight:600}
+.week-hdr .wst{font-size:11px;color:var(--t3)}
+.week-body{display:none;padding-left:8px;border-left:2px solid var(--brd)}
+.week-body.open{display:block}
+.day-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:var(--t2);border-bottom:1px solid rgba(255,255,255,.02)}
+.day-row .dn{width:50px;font-weight:600;color:var(--t1);font-size:12px}
+.day-row .done-check{color:var(--ac)}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;display:flex;justify-content:space-around;padding:10px 18px 18px;z-index:100;background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.bnav.hid{display:none}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--t3);cursor:pointer;font-size:10px;font-weight:500;transition:.2s;padding:3px 10px}
+.ni:hover,.ni.on{color:var(--ac)}
+.ni svg{width:20px;height:20px}
+
+@supports(padding-bottom:env(safe-area-inset-bottom)){.bnav,.ch-input-wrap{padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="nav">
+  <div class="nav-logo"><b>Speak</b><span>Flow</span></div>
+  <div class="nav-right">
+    <div class="day-badge">Day <span id="dayNum">1</span>/90</div>
+    <div class="streak-badge">🔥 <span id="streakN">0</span></div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div class="scr on" id="scrHome">
+  <div class="hero"><h1 id="greetTxt">Good morning! 👋</h1><p>Сегодня: <span id="todayMin">0</span>/60 мин</p></div>
+  <div class="week-label" id="weekLabel">Week 1 · Foundations</div>
+  <div class="topic-card">
+    <h2 id="topicTitle">Loading...</h2>
+    <p id="topicDesc">—</p>
+    <div class="prog-row"><div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div><div class="prog-txt"><span id="progDone">0</span>/5</div></div>
+  </div>
+  <div class="stitle">Сегодняшние тренировки</div>
+  <div class="lessons">
+    <div class="lcard" onclick="openChat()"><div class="lico ic1">💬</div><div class="linfo"><h3>AI Free Talk</h3><p>Разговор с AI-собеседником</p></div><div class="ltime">~20м</div></div>
+    <div class="lcard" onclick="openVocab()"><div class="lico ic2">📚</div><div class="linfo"><h3>Vocabulary</h3><p id="vocabLabel">Phrasal verbs</p></div><div class="ltime">~10м</div></div>
+    <div class="lcard" onclick="openEx('listen')"><div class="lico ic3">🎧</div><div class="linfo"><h3>Listening</h3><p>Разговорные фразы</p></div><div class="ltime">~10м</div></div>
+    <div class="lcard" onclick="openEx('grammar')"><div class="lico ic4">✏️</div><div class="linfo"><h3>Grammar</h3><p id="gramLabel">Tenses review</p></div><div class="ltime">~10м</div></div>
+    <div class="lcard" onclick="openEx('scenario')"><div class="lico ic5">🎭</div><div class="linfo"><h3>Scenario</h3><p>Ситуации из жизни</p></div><div class="ltime">~10м</div></div>
+  </div>
+  <div class="stitle">Программа на 90 дней</div>
+  <div id="programList"></div>
+</div>
+
+<!-- CHAT -->
+<div class="scr" id="scrChat">
+  <div class="ch-hdr"><button class="back" onclick="goHome()">←</button><div class="ch-inf"><h2>AI Free Talk</h2><p id="chatSub">Тема дня</p></div></div>
+  <div class="timer-row"><div class="timer-track"><div class="timer-fill" id="tmFill" style="width:100%"></div></div><div class="timer-txt" id="tmTxt">20:00</div></div>
+  <div class="msgs" id="chatMsgs"></div>
+  <div class="ch-input-wrap" id="chatInputWrap" style="display:none">
+    <div class="hints" id="chatHints"></div>
+    <div class="ch-row">
+      <textarea class="ch-in" id="chatIn" placeholder="Type in English..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+      <button class="ibtn ibtn-m" id="micB" onclick="toggleMic()">🎤</button>
+      <button class="ibtn ibtn-s" onclick="sendMsg()">↑</button>
+    </div>
+  </div>
+</div>
+
+<!-- VOCAB -->
+<div class="scr" id="scrVocab">
+  <div class="ch-hdr"><button class="back" onclick="goHome()">←</button><div class="ch-inf"><h2>Vocabulary</h2><p>Tap to reveal</p></div></div>
+  <div id="vocabArea"></div>
+</div>
+
+<!-- EXERCISE -->
+<div class="scr" id="scrEx">
+  <div class="ch-hdr"><button class="back" onclick="goHome()">←</button><div class="ch-inf"><h2 id="exTtl">Exercise</h2><p id="exSub">—</p></div></div>
+  <div id="exArea"></div>
+</div>
+
+<!-- STATS -->
+<div class="scr" id="scrStats">
+  <div class="hero"><h1>Your Progress</h1><p>Day <span id="statDay">1</span> of 90</p></div>
+  <div class="sg">
+    <div class="sc"><div class="sv s-ac" id="stW">0</div><div class="sl">Слов изучено</div></div>
+    <div class="sc"><div class="sv s-wm" id="stS">0</div><div class="sl">Дней подряд</div></div>
+    <div class="sc"><div class="sv s-bl" id="stM">0</div><div class="sl">Минут сегодня</div></div>
+    <div class="sc"><div class="sv s-pr" id="stE">0</div><div class="sl">Упражнений</div></div>
+  </div>
+  <div class="stitle">Эта неделя</div>
+  <div class="wch" id="weekCh"></div>
+  <div class="stitle">Изученные слова</div>
+  <div id="learnedW" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bnav" id="bnav">
+  <div class="ni on" onclick="showScr('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>Home</div>
+  <div class="ni" onclick="openChat()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>Chat</div>
+  <div class="ni" onclick="showScr('stats')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Stats</div>
+</div>
+</div>
+
+<script>
+// ===================== 90-DAY PROGRAM =====================
+const PROGRAM = [
+  // MONTH 1: Foundations (Weeks 1-4)
+  {wk:1,title:"Everyday Basics",topics:[
+    {t:"Greetings & Small Talk",d:"Привет, как дела, прощания"},
+    {t:"About Yourself",d:"Рассказ о себе, работе, хобби"},
+    {t:"Daily Routines",d:"Утро, вечер, привычки"},
+    {t:"Food & Eating Out",d:"Заказ еды, предпочтения"},
+    {t:"Weekend Plans",d:"Планы, приглашения, досуг"},
+    {t:"Weather & Seasons",d:"Погода, одежда, планирование"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:2,title:"Getting Around",topics:[
+    {t:"Transportation",d:"Транспорт, маршруты, такси"},
+    {t:"Asking for Directions",d:"Как пройти, ориентиры"},
+    {t:"Shopping Basics",d:"Магазины, размеры, цены"},
+    {t:"At the Bank / Post Office",d:"Бытовые дела"},
+    {t:"Phone Calls",d:"Звонки, сообщения, назначение встреч"},
+    {t:"Appointments",d:"Запись к врачу, бронь"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:3,title:"Social English",topics:[
+    {t:"Meeting New People",d:"Знакомства, вопросы"},
+    {t:"Talking About Family",d:"Семья, отношения"},
+    {t:"Hobbies & Interests",d:"Увлечения, спорт"},
+    {t:"Giving Opinions",d:"Согласие, несогласие, аргументы"},
+    {t:"Making Plans Together",d:"Договориться, предложить"},
+    {t:"Telling Stories",d:"Прошлое, анекдоты, истории"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:4,title:"Home & Living",topics:[
+    {t:"Describing Your Home",d:"Комнаты, мебель, обстановка"},
+    {t:"Neighbors & Community",d:"Соседи, правила, жалобы"},
+    {t:"Cooking & Recipes",d:"Готовка, ингредиенты"},
+    {t:"Cleaning & Repairs",d:"Уборка, ремонт, мастер"},
+    {t:"Online Shopping",d:"Заказы, доставка, возврат"},
+    {t:"Monthly Expenses",d:"Бюджет, счета, подписки"},
+    {t:"Month 1 Review",d:"Большое повторение"}
+  ]},
+  // MONTH 2: Intermediate (Weeks 5-8)
+  {wk:5,title:"Work & Professional",topics:[
+    {t:"Job Interview",d:"Вопросы, ответы, первое впечатление"},
+    {t:"Office Communication",d:"Emails, митинги, чаты"},
+    {t:"Presentations",d:"Структура, связки, Q&A"},
+    {t:"Negotiations",d:"Торг, условия, компромисс"},
+    {t:"Giving & Receiving Feedback",d:"Критика, похвала"},
+    {t:"Work-Life Balance",d:"Стресс, отпуск, границы"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:6,title:"Travel & Adventure",topics:[
+    {t:"At the Airport",d:"Регистрация, багаж, задержки"},
+    {t:"Hotel Check-in/out",d:"Бронь, запросы, жалобы"},
+    {t:"Exploring a New City",d:"Достопримечательности, гиды"},
+    {t:"Emergency Situations",d:"Потерялся, врач, полиция"},
+    {t:"Cultural Differences",d:"Обычаи, этикет, табу"},
+    {t:"Travel Stories",d:"Рассказы о поездках"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:7,title:"Entertainment & Media",topics:[
+    {t:"Movies & TV Shows",d:"Жанры, рецензии, рекомендации"},
+    {t:"Music & Concerts",d:"Стили, впечатления"},
+    {t:"Books & Podcasts",d:"Обсуждение, рекомендации"},
+    {t:"Social Media",d:"Посты, комментарии, тренды"},
+    {t:"Sports & Games",d:"Правила, команды, болеть"},
+    {t:"Art & Museums",d:"Описание, впечатления"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:8,title:"Health & Wellness",topics:[
+    {t:"Doctor's Appointment",d:"Симптомы, лечение, рецепт"},
+    {t:"At the Pharmacy",d:"Лекарства, дозировка"},
+    {t:"Fitness & Gym",d:"Тренировки, мотивация"},
+    {t:"Mental Health",d:"Стресс, самочувствие, поддержка"},
+    {t:"Healthy Eating",d:"Диеты, аллергии, советы"},
+    {t:"First Aid",d:"Травмы, экстренная помощь"},
+    {t:"Month 2 Review",d:"Большое повторение"}
+  ]},
+  // MONTH 3: Advanced (Weeks 9-12)
+  {wk:9,title:"Debates & Opinions",topics:[
+    {t:"Technology & AI",d:"За и против, будущее"},
+    {t:"Environment",d:"Экология, привычки, решения"},
+    {t:"Education Systems",d:"Сравнение, критика, идеи"},
+    {t:"Social Issues",d:"Неравенство, справедливость"},
+    {t:"Hypothetical Scenarios",d:"Что если..., условные"},
+    {t:"Persuasive Arguments",d:"Убеждение, риторика"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:10,title:"Business English",topics:[
+    {t:"Startup Pitch",d:"Идея, продукт, инвесторы"},
+    {t:"Client Meetings",d:"Переговоры, follow-up"},
+    {t:"Project Management",d:"Дедлайны, задачи, отчёты"},
+    {t:"Networking Events",d:"Контакты, elevator pitch"},
+    {t:"Conflict Resolution",d:"Жалобы, решение, медиация"},
+    {t:"Business Emails",d:"Формальный стиль, шаблоны"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:11,title:"Cultural Fluency",topics:[
+    {t:"Idioms & Slang",d:"Живой язык, мемы"},
+    {t:"British vs American",d:"Различия, акценты, слова"},
+    {t:"Humor & Sarcasm",d:"Шутки, ирония, подтекст"},
+    {t:"Formal vs Informal",d:"Регистры, переключение"},
+    {t:"Euphemisms & Politeness",d:"Мягкие формулировки"},
+    {t:"Proverbs & Sayings",d:"Пословицы, мудрость"},
+    {t:"Review & Practice",d:"Повторение недели"}
+  ]},
+  {wk:12,title:"Mastery Week",topics:[
+    {t:"Spontaneous Debates",d:"Случайные темы, аргументация"},
+    {t:"Storytelling Advanced",d:"Сложные нарративы"},
+    {t:"Teaching Others",d:"Объясни тему по-английски"},
+    {t:"Phone & Video Calls",d:"Профессиональные звонки"},
+    {t:"Final Challenge",d:"Итоговый тест"},
+    {t:"Reflection & Goals",d:"Итоги, план дальше"},
+    {t:"Graduation! 🎓",d:"Ты прошёл 90 дней!"}
+  ]}
+];
+
+// ===================== VOCABULARY (120 items in 12 weekly sets) =====================
+const VOCAB_ALL = [
+  // Week 1-2: Basic phrasal verbs
+  {w:"get up",p:"/ɡɛt ʌp/",m:"встать (с кровати)",ex:"I usually get up at 7 AM.",wk:1},
+  {w:"hang out",p:"/hæŋ aʊt/",m:"проводить время, тусоваться",ex:"Let's hang out this weekend.",wk:1},
+  {w:"figure out",p:"/ˈfɪɡ.ər aʊt/",m:"разобраться, понять",ex:"I need to figure out how this works.",wk:1},
+  {w:"come across",p:"/kʌm əˈkrɒs/",m:"наткнуться / производить впечатление",ex:"She comes across as very friendly.",wk:1},
+  {w:"end up",p:"/ɛnd ʌp/",m:"в итоге оказаться",ex:"We ended up staying until midnight.",wk:1},
+  {w:"look forward to",p:"",m:"с нетерпением ждать",ex:"I'm looking forward to the trip.",wk:1},
+  {w:"turn out",p:"/tɜːrn aʊt/",m:"оказаться (в итоге)",ex:"It turned out to be a great idea.",wk:1},
+  {w:"catch up",p:"/kætʃ ʌp/",m:"нагнать / встретиться",ex:"Let's catch up over coffee.",wk:1},
+  {w:"pull off",p:"/pʊl ɒf/",m:"удаться, суметь сделать",ex:"She pulled off an amazing event.",wk:1},
+  {w:"run into",p:"/rʌn ˈɪn.tuː/",m:"случайно встретить",ex:"I ran into my old friend at the mall.",wk:1},
+  // Week 3-4
+  {w:"put up with",p:"",m:"мириться, терпеть",ex:"I can't put up with the noise.",wk:2},
+  {w:"bring up",p:"",m:"поднять тему / воспитать",ex:"She brought up an important issue.",wk:2},
+  {w:"sort out",p:"",m:"разобраться, решить",ex:"Let me sort this out for you.",wk:2},
+  {w:"fed up with",p:"",m:"сыт по горло",ex:"I'm fed up with this weather.",wk:2},
+  {w:"keep up with",p:"",m:"не отставать, быть в курсе",ex:"It's hard to keep up with trends.",wk:2},
+  {w:"get along with",p:"",m:"ладить с кем-то",ex:"I get along well with my neighbors.",wk:2},
+  {w:"take after",p:"",m:"быть похожим (на родственника)",ex:"She takes after her mother.",wk:2},
+  {w:"grow up",p:"",m:"вырасти",ex:"I grew up in a small town.",wk:2},
+  {w:"look up to",p:"",m:"уважать, восхищаться",ex:"Kids look up to their parents.",wk:2},
+  {w:"fall out with",p:"",m:"поссориться",ex:"They fell out over money.",wk:2},
+  // Week 5-6: Work & Travel
+  {w:"a no-brainer",p:"",m:"очевидное решение",ex:"Taking that deal was a no-brainer.",wk:3},
+  {w:"get the hang of",p:"",m:"освоить, приноровиться",ex:"You'll get the hang of it soon.",wk:3},
+  {w:"on the same page",p:"",m:"одинаково понимать",ex:"Let's make sure we're on the same page.",wk:3},
+  {w:"out of the blue",p:"",m:"неожиданно",ex:"He called me out of the blue.",wk:3},
+  {w:"the bottom line",p:"",m:"суть дела, итог",ex:"The bottom line is we need more time.",wk:3},
+  {w:"touch base",p:"",m:"связаться, обменяться новостями",ex:"Let's touch base next week.",wk:3},
+  {w:"call it a day",p:"",m:"закончить на сегодня",ex:"It's late, let's call it a day.",wk:3},
+  {w:"from scratch",p:"",m:"с нуля",ex:"I built this website from scratch.",wk:3},
+  {w:"hit the road",p:"",m:"отправиться в путь",ex:"We should hit the road early tomorrow.",wk:3},
+  {w:"once in a blue moon",p:"",m:"очень редко",ex:"I eat fast food once in a blue moon.",wk:3},
+  // Week 7-8
+  {w:"binge-watch",p:"",m:"смотреть запоем",ex:"I binge-watched the whole season.",wk:4},
+  {w:"spoiler alert",p:"",m:"предупреждение о спойлере",ex:"Spoiler alert — the hero dies.",wk:4},
+  {w:"guilty pleasure",p:"",m:"удовольствие, за которое немного стыдно",ex:"Reality TV is my guilty pleasure.",wk:4},
+  {w:"under the weather",p:"",m:"нездоровится",ex:"I'm feeling under the weather today.",wk:4},
+  {w:"work out",p:"",m:"тренироваться / получиться",ex:"Things will work out in the end.",wk:4},
+  {w:"take it easy",p:"",m:"не напрягаться, расслабиться",ex:"Just take it easy this weekend.",wk:4},
+  {w:"burn out",p:"",m:"выгореть",ex:"She burned out from working too much.",wk:4},
+  {w:"cut down on",p:"",m:"сократить потребление",ex:"I'm trying to cut down on sugar.",wk:4},
+  {w:"sleep on it",p:"",m:"переспать с мыслью, обдумать",ex:"Let me sleep on it and decide tomorrow.",wk:4},
+  {w:"a piece of cake",p:"",m:"проще простого",ex:"That exam was a piece of cake.",wk:4},
+  // Week 9-10: Advanced
+  {w:"think outside the box",p:"",m:"мыслить нестандартно",ex:"We need to think outside the box here.",wk:5},
+  {w:"play devil's advocate",p:"",m:"выступить адвокатом дьявола",ex:"Let me play devil's advocate for a second.",wk:5},
+  {w:"see eye to eye",p:"",m:"сходиться во мнении",ex:"We don't always see eye to eye.",wk:5},
+  {w:"beat around the bush",p:"",m:"ходить вокруг да около",ex:"Stop beating around the bush and tell me.",wk:5},
+  {w:"miss the point",p:"",m:"не понять суть",ex:"I think you're missing the point here.",wk:5},
+  {w:"cut to the chase",p:"",m:"перейти к делу",ex:"Let's cut to the chase — what do you need?",wk:5},
+  {w:"go the extra mile",p:"",m:"приложить дополнительные усилия",ex:"She always goes the extra mile for clients.",wk:5},
+  {w:"behind the scenes",p:"",m:"за кулисами, в процессе",ex:"A lot happens behind the scenes.",wk:5},
+  {w:"in the long run",p:"",m:"в долгосрочной перспективе",ex:"It'll pay off in the long run.",wk:5},
+  {w:"game-changer",p:"",m:"то, что меняет всё",ex:"AI has been a real game-changer.",wk:5},
+  // Week 11-12: Fluency
+  {w:"it's not rocket science",p:"",m:"это несложно",ex:"Come on, it's not rocket science!",wk:6},
+  {w:"hit the nail on the head",p:"",m:"попасть в точку",ex:"You hit the nail on the head.",wk:6},
+  {w:"the elephant in the room",p:"",m:"очевидная, но замалчиваемая проблема",ex:"Let's address the elephant in the room.",wk:6},
+  {w:"break the ice",p:"",m:"разрядить обстановку",ex:"A joke can help break the ice.",wk:6},
+  {w:"ring a bell",p:"",m:"звучит знакомо",ex:"Does that name ring a bell?",wk:6},
+  {w:"cost an arm and a leg",p:"",m:"стоить целое состояние",ex:"That car cost an arm and a leg.",wk:6},
+  {w:"get cold feet",p:"",m:"струсить в последний момент",ex:"He got cold feet before the wedding.",wk:6},
+  {w:"add insult to injury",p:"",m:"подливать масла в огонь",ex:"To add insult to injury, it started raining.",wk:6},
+  {w:"when pigs fly",p:"",m:"когда рак на горе свистнет",ex:"He'll clean his room when pigs fly.",wk:6},
+  {w:"the whole nine yards",p:"",m:"всё полностью, по максимуму",ex:"We went the whole nine yards for the party.",wk:6},
+];
+
+// ===================== GRAMMAR (60 exercises) =====================
+const GRAM_ALL = [
+  {q:"I ___ to the gym yesterday.",o:["went","have gone","was going","go"],a:0,e:"Past Simple: конкретное действие в прошлом (yesterday)."},
+  {q:"She ___ here since 2019.",o:["lives","has lived","is living","lived"],a:1,e:"Present Perfect + since: действие, начавшееся в прошлом."},
+  {q:"If I ___ rich, I would travel the world.",o:["am","was","were","be"],a:2,e:"Second Conditional: If + were (subjunctive)."},
+  {q:"By 6 PM, I ___ dinner.",o:["will cook","will have cooked","am cooking","cook"],a:1,e:"Future Perfect: действие завершится к определённому моменту."},
+  {q:"I wish I ___ speak French.",o:["can","could","would","may"],a:1,e:"I wish + could: нереальное желание."},
+  {q:"The report must ___ by Friday.",o:["finish","be finished","to finish","finishing"],a:1,e:"Passive + modal: must be + V3."},
+  {q:"He asked me where I ___.",o:["live","lived","do live","living"],a:1,e:"Reported Speech: согласование времён."},
+  {q:"___ you mind helping me?",o:["Do","Would","Can","Are"],a:1,e:"Would you mind + V-ing — вежливая просьба."},
+  {q:"I'm used to ___ early.",o:["wake","waking","woke","woken"],a:1,e:"be used to + V-ing: привык к чему-то."},
+  {q:"She suggested ___ a movie.",o:["watch","to watch","watching","watched"],a:2,e:"suggest + V-ing (НЕ suggest to watch)."},
+  {q:"I ___ English for 5 years now.",o:["study","am studying","have been studying","studied"],a:2,e:"Present Perfect Continuous: процесс с for/since."},
+  {q:"If I had known, I ___ differently.",o:["would act","would have acted","will act","acted"],a:1,e:"Third Conditional: If + Past Perfect, would have + V3."},
+  {q:"The movie ___ by the time we arrived.",o:["started","has started","had already started","starts"],a:2,e:"Past Perfect: действие ДО другого прошлого действия."},
+  {q:"I'd rather you ___ smoke here.",o:["don't","didn't","won't","not"],a:1,e:"I'd rather + subject + Past Simple."},
+  {q:"Neither the students nor the teacher ___ happy.",o:["are","is","were","be"],a:1,e:"Neither...nor: глагол согласуется с ближайшим (teacher → is)."},
+  {q:"It's high time we ___ a decision.",o:["make","made","will make","making"],a:1,e:"It's high time + Past Simple (сослагательное)."},
+  {q:"He denied ___ the money.",o:["steal","to steal","stealing","stolen"],a:2,e:"deny + V-ing."},
+  {q:"Not until I got home ___ I realize my mistake.",o:["do","did","had","was"],a:1,e:"Инверсия после Not until."},
+  {q:"She ___ have seen him — she was abroad.",o:["can't","mustn't","shouldn't","wouldn't"],a:0,e:"can't have + V3: невозможно, что (в прошлом)."},
+  {q:"I need to get my car ___.",o:["repair","repaired","repairing","to repair"],a:1,e:"get something done (causative)."},
+  {q:"___ the rain, we went for a walk.",o:["Despite","Although","However","Because"],a:0,e:"Despite + noun/V-ing (НЕ Despite of)."},
+  {q:"She's ___ intelligent person I've ever met.",o:["most","the more","the most","more"],a:2,e:"Superlative: the most + adjective."},
+  {q:"I ___ to call you, but I forgot.",o:["was going","am going","will go","go"],a:0,e:"was going to: намерение в прошлом."},
+  {q:"He acts as if he ___ the boss.",o:["is","was","were","be"],a:2,e:"as if + were (subjunctive mood)."},
+  {q:"By next month, I ___ here for a year.",o:["work","will work","will have been working","am working"],a:2,e:"Future Perfect Continuous: длительность к будущему моменту."},
+  {q:"The sooner we leave, ___ we'll arrive.",o:["the earlier","earlier","the early","more early"],a:0,e:"The + comparative, the + comparative."},
+  {q:"I don't mind ___ late tonight.",o:["work","to work","working","worked"],a:2,e:"don't mind + V-ing."},
+  {q:"You ___ better hurry, or we'll be late.",o:["would","had","should","could"],a:1,e:"had better + base verb: совет с оттенком срочности."},
+  {q:"Hardly ___ I sat down when the phone rang.",o:["have","had","did","was"],a:1,e:"Hardly had I... when... (инверсия)."},
+  {q:"There's no point ___ about it.",o:["worry","to worry","worrying","worried"],a:2,e:"There's no point + V-ing."},
+];
+
+// ===================== LISTENING (30 exercises) =====================
+const LISTEN_ALL = [
+  {t:"Wanna grab a bite? I know this awesome place downtown.",q:"What is suggested?",o:["Shopping","Eating out","Visit a friend","Going home"],a:1,tip:"'grab a bite' = перекусить"},
+  {t:"I'm gonna head out early. Got a ton of stuff to do.",q:"What will the speaker do?",o:["Stay late","Leave early","Take a nap","Call someone"],a:1,tip:"'head out' = уходить"},
+  {t:"Honestly, I couldn't care less about their opinion.",q:"How does the speaker feel?",o:["Very interested","Worried","Doesn't care","Angry"],a:2,tip:"'couldn't care less' = всё равно"},
+  {t:"Let me sleep on it and get back to you.",q:"What will happen?",o:["Sleep immediately","Think it over","Refuse","Ask someone else"],a:1,tip:"'sleep on it' = обдумать"},
+  {t:"You totally nailed that presentation!",q:"How was the presentation?",o:["Bad","Cancelled","Excellent","Average"],a:2,tip:"'nailed it' = отлично справился"},
+  {t:"I'm kind of on the fence about the new proposal.",q:"How does the speaker feel?",o:["Strongly supports","Undecided","Against it","Excited"],a:1,tip:"'on the fence' = в раздумьях"},
+  {t:"Can you keep it down? I'm trying to focus here.",q:"What is requested?",o:["Turn up volume","Be quieter","Leave the room","Help with work"],a:1,tip:"'keep it down' = потише"},
+  {t:"She's been under a lot of pressure at work lately.",q:"What's happening?",o:["She's relaxed","She's stressed","She quit","She got promoted"],a:1,tip:"'under pressure' = под давлением"},
+  {t:"That meeting was a total waste of time.",q:"Opinion about the meeting?",o:["Productive","Useless","Interesting","Short"],a:1,tip:"'waste of time' = пустая трата"},
+  {t:"I've got mixed feelings about moving abroad.",q:"How does the speaker feel?",o:["Very positive","Negative","Both positive and negative","Indifferent"],a:2,tip:"'mixed feelings' = двойственные чувства"},
+  {t:"He's been blowing things out of proportion again.",q:"What is he doing?",o:["Exaggerating","Lying","Ignoring","Celebrating"],a:0,tip:"'blow out of proportion' = раздувать"},
+  {t:"Fingers crossed we get the contract!",q:"What is the speaker expressing?",o:["Certainty","Hope","Doubt","Fear"],a:1,tip:"'fingers crossed' = надеюсь, скрещу пальцы"},
+  {t:"Long story short, we missed the flight.",q:"What happened?",o:["Caught the flight","Missed the flight","Flight was cancelled","Changed plans"],a:1,tip:"'long story short' = короче говоря"},
+  {t:"Don't get me started on parking in this city.",q:"How does the speaker feel about parking?",o:["Loves it","Frustrated","Indifferent","Curious"],a:1,tip:"'don't get me started' = даже не начинай (сильное недовольство)"},
+  {t:"I'm all ears — tell me everything!",q:"The speaker is...",o:["Ignoring","Ready to listen","Confused","Leaving"],a:1,tip:"'all ears' = весь внимание"},
+];
+
+// ===================== SCENARIOS (30) =====================
+const SCEN_ALL = [
+  {s:"You're at a café and the waiter brings the wrong order.",p:"Politely explain the mistake and ask for the correct dish.",h:["Excuse me, I think there's been a mix-up...","I actually ordered the...","Would you mind..."]},
+  {s:"You're meeting a new colleague at work.",p:"Introduce yourself and ask about their role.",h:["Hi, I don't think we've met...","What department are you in?","Would you like to grab a coffee?"]},
+  {s:"You need to book a doctor's appointment.",p:"Call and explain your symptoms.",h:["I'd like to make an appointment...","I've been having...","What's the earliest available?"]},
+  {s:"Your neighbor's music is too loud at night.",p:"Talk to them politely about the noise.",h:["Hey, I hope you don't mind me saying...","I totally understand, but...","Maybe we could..."]},
+  {s:"You're returning a defective product at a store.",p:"Explain the problem and ask for a refund.",h:["I bought this recently and unfortunately...","Would it be possible to...","I have the receipt."]},
+  {s:"You're at a job interview and they ask 'Tell me about yourself.'",p:"Give a confident 1-minute introduction.",h:["I'm originally from...","I've been working in... for...","What excites me most about this role is..."]},
+  {s:"You need to complain about a hotel room.",p:"Call reception and explain the issues politely.",h:["I'm sorry to bother you, but...","The room doesn't seem to...","Would it be possible to switch rooms?"]},
+  {s:"You're at a party where you don't know anyone.",p:"Start a conversation with a stranger.",h:["Hi there! How do you know the host?","So what do you do for fun?","This is a great place, isn't it?"]},
+  {s:"Your flight is delayed and you'll miss your connection.",p:"Speak to the airline agent at the desk.",h:["Excuse me, my connecting flight is at...","Is there any way to...","What are my options?"]},
+  {s:"You're giving directions to a tourist who is lost.",p:"Help them find their way to the museum.",h:["Go straight ahead until you see...","Turn left at the...","It's about a 10-minute walk."]},
+  {s:"You're negotiating rent with your landlord.",p:"Ask for a reduction or better terms.",h:["I've really enjoyed living here, but...","I was wondering if there's any flexibility...","I've seen comparable places for..."]},
+  {s:"Your boss asks you to work overtime on a weekend.",p:"Politely decline or negotiate.",h:["I appreciate you thinking of me, but...","Would it be possible to...","I could do it if we..."]},
+  {s:"You're at a parent-teacher meeting.",p:"Ask about your child's progress.",h:["How has... been doing in class?","Are there any areas where...","What can we do at home to help?"]},
+  {s:"You want to cancel a gym membership.",p:"Call and explain you want to cancel.",h:["I'd like to cancel my membership...","I understand there might be a notice period...","Could you walk me through the process?"]},
+  {s:"You're splitting the bill at a restaurant with friends.",p:"Suggest how to divide it fairly.",h:["Should we just split it evenly?","I only had a salad, so maybe...","Why don't we each pay for what we ordered?"]},
+];
+
+// ===================== STATE =====================
+let S={streak:0,todayMin:0,words:[],exDone:0,dayDone:0,chatH:[],wkData:[0,0,0,0,0,0,0],lastDay:null,tmInt:null,tmSec:0,sessStart:null,currentDay:1,startDate:null};
+
+function load(){
+  try{const x=localStorage.getItem('sf90');if(x){Object.assign(S,JSON.parse(x))}}catch(e){}
+  const today=new Date().toDateString();
+  if(!S.startDate)S.startDate=today;
+  const daysSinceStart=Math.floor((new Date(today)-new Date(S.startDate))/(86400000))+1;
+  S.currentDay=Math.min(Math.max(daysSinceStart,1),90);
+  if(S.lastDay!==today){
+    if(S.lastDay===new Date(Date.now()-86400000).toDateString()){S.streak++}
+    else if(S.lastDay){S.streak=1}else{S.streak=1}
+    S.todayMin=0;S.dayDone=0;
+    S.wkData.push(0);S.wkData=S.wkData.slice(-7);
+    S.lastDay=today;
+  }
+  save();
+}
+function save(){try{localStorage.setItem('sf90',JSON.stringify(S))}catch(e){}}
+
+function getCurrentWeekAndDay(){
+  const wk=Math.ceil(S.currentDay/7);
+  const d=(S.currentDay-1)%7;
+  return{week:Math.min(wk,12),dayInWeek:d};
+}
+function getTodayTopic(){
+  const{week,dayInWeek}=getCurrentWeekAndDay();
+  const wkData=PROGRAM[week-1];
+  if(!wkData)return{t:"Free Practice",d:"Open practice day"};
+  return wkData.topics[Math.min(dayInWeek,wkData.topics.length-1)];
+}
+function getTodayVocab(){
+  const{week}=getCurrentWeekAndDay();
+  const setIdx=Math.min(Math.floor((week-1)/2),5);
+  return VOCAB_ALL.filter(v=>v.wk===setIdx+1);
+}
+
+// ===================== UI =====================
+load();
+refreshUI();
+
+function refreshUI(){
+  const{week}=getCurrentWeekAndDay();
+  const wkD=PROGRAM[Math.min(week-1,11)];
+  const topic=getTodayTopic();
+  document.getElementById('dayNum').textContent=S.currentDay;
+  document.getElementById('streakN').textContent=S.streak;
+  document.getElementById('todayMin').textContent=S.todayMin;
+  document.getElementById('weekLabel').textContent=`Week ${week} · ${wkD.title}`;
+  document.getElementById('topicTitle').textContent=topic.t;
+  document.getElementById('topicDesc').textContent=topic.d;
+  document.getElementById('progDone').textContent=S.dayDone;
+  document.getElementById('progFill').style.width=(S.dayDone/5*100)+'%';
+  const h=new Date().getHours();
+  document.getElementById('greetTxt').textContent=(h<12?'Good morning':h<18?'Good afternoon':'Good evening')+' 👋';
+  document.getElementById('vocabLabel').textContent=`Set ${Math.min(Math.floor((week-1)/2)+1,6)} of 6`;
+  document.getElementById('gramLabel').textContent=`Level ${week <= 4 ? 'A2-B1' : week <= 8 ? 'B1-B2' : 'B2-C1'}`;
+  // Stats
+  document.getElementById('stW').textContent=S.words.length;
+  document.getElementById('stS').textContent=S.streak;
+  document.getElementById('stM').textContent=S.todayMin;
+  document.getElementById('stE').textContent=S.exDone;
+  document.getElementById('statDay').textContent=S.currentDay;
+  // Week chart
+  const wc=document.getElementById('weekCh');
+  const ds=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  const ti=(new Date().getDay()+6)%7;
+  const mx=Math.max(...S.wkData,30);
+  wc.innerHTML=S.wkData.map((m,i)=>`<div class="wb"><div class="br${i===ti?' td':''}" style="height:${Math.max(3,m/mx*80)}px"></div><div class="dy">${ds[i]}</div></div>`).join('');
+  // Learned words
+  const lw=document.getElementById('learnedW');
+  lw.innerHTML=S.words.length?S.words.slice(-30).map(w=>`<span style="background:var(--s1);border:1px solid var(--brd);padding:3px 9px;border-radius:7px;font-size:12px">${w}</span>`).join(''):'<p style="color:var(--t3);font-size:12px">Пока пусто</p>';
+  // Program list
+  buildProgram();
+}
+
+function buildProgram(){
+  const el=document.getElementById('programList');
+  const{week:curWk}=getCurrentWeekAndDay();
+  el.innerHTML=PROGRAM.map((w,i)=>{
+    const done=i+1<curWk;
+    const cur=i+1===curWk;
+    return`<div class="week-block">
+      <div class="week-hdr" onclick="this.nextElementSibling.classList.toggle('open')">
+        <h3>${done?'✅ ':''}${cur?'▶ ':''}Week ${w.wk}: ${w.title}</h3>
+        <span class="wst">${done?'Done':cur?'Current':'Locked'}</span>
+      </div>
+      <div class="week-body${cur?' open':''}">
+        ${w.topics.map((t,j)=>`<div class="day-row"><span class="dn">Day ${(i*7)+j+1}</span>${t.t} — <span style="color:var(--t3)">${t.d}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== NAVIGATION =====================
+function showScr(n){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));
+  const m={home:'scrHome',chat:'scrChat',stats:'scrStats',vocab:'scrVocab',exercise:'scrEx'};
+  document.getElementById(m[n]).classList.add('on');
+  document.getElementById('bnav').classList.toggle('hid',n==='chat');
+  document.getElementById('chatInputWrap').style.display=n==='chat'?'block':'none';
+  if(n==='home')document.querySelectorAll('.ni')[0].classList.add('on');
+  if(n==='stats'){document.querySelectorAll('.ni')[2].classList.add('on');refreshUI()}
+  window.scrollTo(0,0);
+}
+function goHome(){
+  if(S.tmInt){clearInterval(S.tmInt);S.tmInt=null}
+  if(S.sessStart){
+    S.todayMin+=Math.round((Date.now()-S.sessStart)/60000);
+    const ti=(new Date().getDay()+6)%7;
+    S.wkData[ti]=S.todayMin;
+    S.sessStart=null;save();
+  }
+  showScr('home');refreshUI();
+}
+
+// ===================== TIMER =====================
+function startTm(sec,fEl,tEl){
+  S.tmSec=sec;S.sessStart=Date.now();const tot=sec;
+  if(S.tmInt)clearInterval(S.tmInt);
+  S.tmInt=setInterval(()=>{
+    S.tmSec--;if(S.tmSec<=0){clearInterval(S.tmInt);S.tmSec=0}
+    const m=Math.floor(S.tmSec/60),s=S.tmSec%60;
+    if(tEl)tEl.textContent=m+':'+String(s).padStart(2,'0');
+    if(fEl)fEl.style.width=(S.tmSec/tot*100)+'%';
+  },1000);
+}
+
+// ===================== AI CHAT =====================
+function openChat(){
+  showScr('chat');
+  const ms=document.getElementById('chatMsgs');
+  ms.innerHTML='';S.chatH=[];
+  const topic=getTodayTopic();
+  document.getElementById('chatSub').textContent=topic.t;
+  startTm(20*60,document.getElementById('tmFill'),document.getElementById('tmTxt'));
+  
+  const starters=[
+    `Hey! Today's topic is "${topic.t}". ${topic.d}. Let's start — tell me, what comes to mind when you think about this?`,
+    `Hi there! Let's practice "${topic.t}" today. What's your experience with this topic?`,
+    `Good to see you! Ready to work on "${topic.t}"? Let's begin with a simple question — how does this topic relate to your daily life?`,
+  ];
+  setTimeout(()=>{
+    const msg=starters[Math.floor(Math.random()*starters.length)];
+    addBot(msg);
+    speak(msg);
+    setHints(["Well, I think...","In my experience...","That's interesting because..."]);
+  },600);
+}
+
+function addBot(txt,extra=''){
+  const ms=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg b';
+  d.innerHTML='<div class="ai-badge">✦ AI Tutor</div>'+txt+extra;
+  ms.appendChild(d);S.chatH.push({role:'assistant',content:txt.replace(/<[^>]+>/g,'')});
+  setTimeout(()=>d.scrollIntoView({behavior:'smooth',block:'end'}),80);
+}
+function addUsr(txt){
+  const ms=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='msg u';d.textContent=txt;
+  ms.appendChild(d);S.chatH.push({role:'user',content:txt});
+  d.scrollIntoView({behavior:'smooth',block:'end'});
+}
+function showTyp(){
+  const ms=document.getElementById('chatMsgs');
+  const d=document.createElement('div');d.className='typ';d.id='typI';
+  d.innerHTML='<span></span><span></span><span></span>';
+  ms.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'end'});
+}
+function rmTyp(){const t=document.getElementById('typI');if(t)t.remove()}
+function setHints(h){document.getElementById('chatHints').innerHTML=h.map(x=>`<div class="hint" onclick="document.getElementById('chatIn').value=this.textContent;document.getElementById('chatIn').focus()">${x}</div>`).join('')}
+
+async function sendMsg(){
+  const inp=document.getElementById('chatIn');
+  const txt=inp.value.trim();if(!txt)return;
+  inp.value='';inp.style.height='auto';
+  document.getElementById('chatHints').innerHTML='';
+  addUsr(txt);showTyp();
+  
+  // Try AI API, fallback to local
+  try{
+    const topic=getTodayTopic();
+    const sysPrompt=`You are a friendly English conversation partner helping a Russian speaker practice spoken English. Today's topic: "${topic.t}" (${topic.d}).
+
+Rules:
+1. Respond naturally in 2-4 sentences, like a real conversation
+2. If the user makes a grammar or vocabulary mistake, gently correct it in a separate line starting with "💡 Tip:"
+3. Ask a follow-up question to keep the conversation going
+4. Sometimes teach a new useful word or phrase, marking it with [NEW: word - meaning]
+5. Keep your language at B1-B2 level
+6. Be encouraging and supportive
+7. Mix topics naturally — don't be robotic`;
+
+    const messages=S.chatH.slice(-10);
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:sysPrompt,
+        messages:messages
+      })
+    });
+    const data=await resp.json();
+    rmTyp();
+    
+    if(data.content&&data.content[0]){
+      let reply=data.content.map(c=>c.text||'').join('\n').trim();
+      // Parse corrections and new words
+      let extra='';
+      const tipMatch=reply.match(/💡\s*Tip:?\s*(.+?)(?:\n|$)/i);
+      if(tipMatch){
+        extra=`<div class="corr">💡 <b>Tip:</b> ${tipMatch[1]}</div>`;
+        reply=reply.replace(tipMatch[0],'').trim();
+      }
+      const nwMatch=reply.match(/\[NEW:\s*(.+?)\s*-\s*(.+?)\]/i);
+      if(nwMatch){
+        reply=reply.replace(nwMatch[0],`<span class="nw" title="${nwMatch[2]}">${nwMatch[1]}</span>`);
+      }
+      addBot(reply,extra);
+      speak(reply.replace(/<[^>]+>/g,''));
+      setHints(["I agree, and...","That's a good point, but...","Could you explain more about..."]);
+    } else { throw new Error('No content'); }
+  } catch(e){
+    rmTyp();
+    // Fallback local response
+    const corr=checkGram(txt);
+    let extra=corr?`<div class="corr">💡 <b>Tip:</b> ${corr}</div>`:'';
+    const fb=[
+      "That's interesting! Can you tell me more about that?",
+      "Good point! What made you think that way?",
+      "I see what you mean. Have you always felt like that?",
+      "Nice! And how did that work out?",
+      "Cool! What would you do differently next time?",
+      "That's a great perspective! Do you think most people would agree?",
+      "Interesting! Have you ever tried the opposite approach?",
+    ];
+    const r=fb[Math.floor(Math.random()*fb.length)];
+    addBot(r,extra);speak(r);
+    setHints(["Well, honestly...","I'd say that...","Let me think..."]);
+  }
+}
+
+function checkGram(t){
+  const c=[
+    {p:/\bi\s+[a-z]/g,f:"Remember: 'I' is always capitalized."},
+    {p:/\bhe don't\b/i,f:"<span class='wr'>he don't</span> → <span class='rt'>he doesn't</span>"},
+    {p:/\bshe don't\b/i,f:"<span class='wr'>she don't</span> → <span class='rt'>she doesn't</span>"},
+    {p:/\bmore better\b/i,f:"<span class='wr'>more better</span> → <span class='rt'>better</span>"},
+    {p:/\bi am agree\b/i,f:"<span class='wr'>I am agree</span> → <span class='rt'>I agree</span>"},
+    {p:/\bdepends of\b/i,f:"<span class='wr'>depends of</span> → <span class='rt'>depends on</span>"},
+    {p:/\bdifferent than\b/i,f:"In British English: <span class='rt'>different from</span>"},
+    {p:/\bmake a photo\b/i,f:"<span class='wr'>make a photo</span> → <span class='rt'>take a photo</span>"},
+    {p:/\bsay me\b/i,f:"<span class='wr'>say me</span> → <span class='rt'>tell me</span>"},
+    {p:/\bexplain me\b/i,f:"<span class='wr'>explain me</span> → <span class='rt'>explain to me</span>"},
+  ];
+  for(const x of c)if(x.p.test(t))return x.f;
+  return null;
+}
+
+// ===================== SPEECH =====================
+function speak(t){
+  const cl=t.replace(/<[^>]+>/g,'');
+  if('speechSynthesis'in window){
+    const u=new SpeechSynthesisUtterance(cl);
+    u.lang='en-US';u.rate=0.88;u.pitch=1;
+    const v=speechSynthesis.getVoices();
+    const ev=v.find(x=>x.lang.startsWith('en')&&/female/i.test(x.name))||v.find(x=>x.lang.startsWith('en'));
+    if(ev)u.voice=ev;
+    speechSynthesis.speak(u);
+  }
+}
+let rec=null,isRec=false;
+function toggleMic(){
+  if(!('webkitSpeechRecognition'in window||'SpeechRecognition'in window)){alert('Use Chrome for voice!');return}
+  if(isRec){rec.stop();isRec=false;document.getElementById('micB').classList.remove('rec');return}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  rec=new SR();rec.lang='en-US';rec.interimResults=true;rec.continuous=false;
+  rec.onstart=()=>{isRec=true;document.getElementById('micB').classList.add('rec')};
+  rec.onresult=(e)=>{document.getElementById('chatIn').value=Array.from(e.results).map(r=>r[0].transcript).join('')};
+  rec.onend=()=>{isRec=false;document.getElementById('micB').classList.remove('rec');if(document.getElementById('chatIn').value.trim())sendMsg()};
+  rec.onerror=()=>{isRec=false;document.getElementById('micB').classList.remove('rec')};
+  rec.start();
+}
+
+// ===================== VOCABULARY =====================
+let vIdx=0,vRevealed=false;
+function openVocab(){
+  vIdx=0;vRevealed=false;showScr('vocab');S.sessStart=Date.now();renderV();
+}
+function renderV(){
+  const area=document.getElementById('vocabArea');
+  const set=getTodayVocab();
+  if(vIdx>=set.length){
+    area.innerHTML=`<div style="text-align:center;padding:36px 16px"><div style="font-size:42px;margin-bottom:14px">🎉</div><h2 style="font-family:var(--fd);margin-bottom:6px">All done!</h2><p style="color:var(--t2);margin-bottom:20px;font-size:13px">You reviewed ${set.length} words today</p><button class="bnxt" onclick="goHome()">Back to Home</button></div>`;
+    S.dayDone++;S.exDone++;save();return;
+  }
+  const v=set[vIdx];vRevealed=false;
+  area.innerHTML=`<div class="vcnt">${vIdx+1}/${set.length}</div>
+    <div class="vc" onclick="revV()"><h2>${v.w}</h2>${v.p?`<div class="ph">${v.p}</div>`:''}<div id="vH" style="display:none"><div class="mn">${v.m}</div><div class="ex">"${v.ex}"</div></div><div class="th" id="vTap">tap to reveal</div></div>
+    <div class="va" id="vAct" style="display:none"><button class="vb l" onclick="vNext(0)">🔄 Ещё учу</button><button class="vb k" onclick="vNext(1)">✅ Знаю</button></div>
+    <div style="text-align:center;margin-top:10px"><button class="ibtn ibtn-m" onclick="speak('${v.w.replace(/'/g,"\\'")}. ${v.ex.replace(/'/g,"\\'")}')" style="display:inline-flex;width:auto;padding:7px 14px;gap:5px;font-size:12px;border-radius:8px">🔊 Listen</button></div>`;
+}
+function revV(){if(vRevealed)return;vRevealed=true;document.getElementById('vH').style.display='block';document.getElementById('vTap').style.display='none';document.getElementById('vAct').style.display='flex';const v=getTodayVocab()[vIdx];speak(v.w+'. '+v.ex)}
+function vNext(k){const v=getTodayVocab()[vIdx];if(k&&!S.words.includes(v.w)){S.words.push(v.w);save()}vIdx++;renderV()}
+
+// ===================== EXERCISES =====================
+let curEx=[],eIdx=0,eType='';
+function openEx(type){
+  eType=type;eIdx=0;S.sessStart=Date.now();
+  const{week}=getCurrentWeekAndDay();
+  if(type==='listen'){
+    curEx=shuf([...LISTEN_ALL]).slice(0,5);
+    document.getElementById('exTtl').textContent='Listening';
+    document.getElementById('exSub').textContent='Understand real speech';
+  }else if(type==='grammar'){
+    const lvl=week<=4?GRAM_ALL.slice(0,10):week<=8?GRAM_ALL.slice(5,20):GRAM_ALL.slice(10,30);
+    curEx=shuf([...lvl]).slice(0,5);
+    document.getElementById('exTtl').textContent='Grammar';
+    document.getElementById('exSub').textContent=week<=4?'A2–B1':week<=8?'B1–B2':'B2–C1';
+  }else{
+    curEx=shuf([...SCEN_ALL]).slice(0,3);
+    document.getElementById('exTtl').textContent='Scenarios';
+    document.getElementById('exSub').textContent='Real-life practice';
+  }
+  showScr('exercise');renderEx();
+}
+
+function renderEx(){
+  const area=document.getElementById('exArea');
+  if(eIdx>=curEx.length){
+    area.innerHTML=`<div style="text-align:center;padding:36px 16px"><div style="font-size:42px;margin-bottom:14px">🏆</div><h2 style="font-family:var(--fd);margin-bottom:6px">Session Complete!</h2><p style="color:var(--t2);margin-bottom:20px;font-size:13px">Great work today</p><button class="bnxt" onclick="goHome()">Back to Home</button></div>`;
+    S.dayDone++;S.exDone++;save();return;
+  }
+  const ex=curEx[eIdx];
+  if(eType==='listen'){
+    area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-l">🎧 Listening</span><h2>Listen and answer</h2><p style="margin-top:6px">"${ex.t}"</p><button class="ibtn ibtn-m" onclick="speak('${ex.t.replace(/'/g,"\\'")}')" style="display:inline-flex;width:auto;padding:7px 14px;gap:5px;font-size:12px;border-radius:8px;margin-top:10px">🔊 Play</button></div><p style="font-size:13px;margin-bottom:10px;color:var(--t2)">${ex.q}</p><div class="ex-opts">${ex.o.map((o,i)=>`<div class="ex-o" onclick="chkAns(this,${i},${ex.a})"><span class="ol">${'ABCD'[i]}</span>${o}</div>`).join('')}</div><div id="eFb"></div>`;
+    speak(ex.t);
+  }else if(eType==='grammar'){
+    area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-g">✏️ Grammar</span><h2>Fill in the blank</h2><p style="font-size:15px;margin-top:6px;color:var(--t1)">${ex.q}</p></div><div class="ex-opts">${ex.o.map((o,i)=>`<div class="ex-o" onclick="chkAns(this,${i},${ex.a})"><span class="ol">${'ABCD'[i]}</span>${o}</div>`).join('')}</div><div id="eFb"></div>`;
+  }else{
+    area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-s">🎭 Scenario</span><h2>${ex.s}</h2><p style="margin-top:6px">${ex.p}</p></div><div style="margin-bottom:10px"><p style="font-size:11px;color:var(--t3);margin-bottom:6px">💡 Hints:</p><div style="display:flex;flex-wrap:wrap;gap:5px">${ex.h.map(h=>`<span style="background:var(--s1);border:1px solid var(--brd);padding:5px 10px;border-radius:7px;font-size:12px;color:var(--t2)">${h}</span>`).join('')}</div></div><textarea class="ch-in" id="scIn" placeholder="Write your response..." rows="3" style="width:100%;margin-bottom:10px"></textarea><div style="display:flex;gap:6px"><button class="ibtn ibtn-m" id="scMic" onclick="togScMic()" style="width:auto;padding:8px 14px;gap:5px;font-size:12px;display:inline-flex">🎤 Speak</button><button class="bnxt" onclick="subSc()" style="flex:1">Submit</button></div><div id="eFb"></div>`;
+  }
+}
+
+function chkAns(el,sel,cor){
+  el.parentElement.querySelectorAll('.ex-o').forEach(o=>o.style.pointerEvents='none');
+  const ex=curEx[eIdx];
+  const tip=eType==='listen'?ex.tip:ex.e;
+  if(sel===cor){
+    el.classList.add('ok');
+    document.getElementById('eFb').innerHTML=`<div class="ex-fb fb-ok">✅ Correct!<br>📖 ${tip}</div><button class="bnxt" onclick="nxtEx()">Next →</button>`;
+  }else{
+    el.classList.add('no');
+    el.parentElement.children[cor].classList.add('ok');
+    document.getElementById('eFb').innerHTML=`<div class="ex-fb fb-no">❌ Correct answer: ${ex.o[cor]}<br>📖 ${tip}</div><button class="bnxt" onclick="nxtEx()">Next →</button>`;
+  }
+}
+
+function subSc(){
+  const t=document.getElementById('scIn').value.trim();if(!t)return;
+  const c=checkGram(t);
+  let fb=`<div class="ex-fb fb-ok">✅ Good job! ${c?'<br>💡 '+c:'Your English looks solid here!'}<br><br>📌 Useful phrases: "${curEx[eIdx].h.join('", "')}"</div><button class="bnxt" onclick="nxtEx()">Next →</button>`;
+  document.getElementById('eFb').innerHTML=fb;
+}
+
+let scRec=null;
+function togScMic(){
+  if(!('webkitSpeechRecognition'in window||'SpeechRecognition'in window)){alert('Use Chrome!');return}
+  const b=document.getElementById('scMic');
+  if(scRec){scRec.stop();scRec=null;b.classList.remove('rec');return}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  scRec=new SR();scRec.lang='en-US';scRec.interimResults=true;
+  scRec.onstart=()=>b.classList.add('rec');
+  scRec.onresult=(e)=>{document.getElementById('scIn').value=Array.from(e.results).map(r=>r[0].transcript).join('')};
+  scRec.onend=()=>{b.classList.remove('rec');scRec=null};
+  scRec.onerror=()=>{b.classList.remove('rec');scRec=null};
+  scRec.start();
+}
+
+function nxtEx(){eIdx++;renderEx()}
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+if('speechSynthesis'in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}
+
+// Register PWA Service Worker
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(e=>console.log('SW error',e))}
+</script>
+</body>
+</html>
