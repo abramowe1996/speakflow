@@ -3,13 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#05080f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<title>SpeakFlow — 90 Day English</title>
+<meta name="theme-color" content="#05080f"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.json"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><title>SpeakFlow — 90 Day English</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -90,6 +84,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 .msg .corr b{color:var(--ac);font-weight:600}
 .msg .wr{color:var(--cr);text-decoration:line-through}
 .msg .rt{color:var(--ac)}
+.msg .ru-help{margin-top:6px;padding:8px 10px;background:rgba(96,165,250,.06);border-radius:8px;border:1px solid rgba(96,165,250,.1);font-size:12px;color:var(--bl);line-height:1.5}.msg .ru-help b{color:var(--bl)}
 .msg .nw{display:inline;background:rgba(96,165,250,.1);color:var(--bl);padding:0 4px;border-radius:3px;font-size:12.5px;cursor:help;border-bottom:1px dashed var(--bl)}
 .msg .tr{margin-top:6px;font-size:11.5px;color:var(--t3);font-style:italic;cursor:pointer}
 
@@ -206,7 +201,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   </div>
   <div class="stitle">Сегодняшние тренировки</div>
   <div class="lessons">
-    <div class="lcard" onclick="openChat()"><div class="lico ic1">💬</div><div class="linfo"><h3>AI Free Talk</h3><p>Разговор с AI-собеседником</p></div><div class="ltime">~20м</div></div>
+    <div class="lcard" onclick="openChat()"><div class="lico ic1">💬</div><div class="linfo"><h3>Разговор с AI</h3><p>С переводом на русский</p></div><div class="ltime">~20м</div></div>
     <div class="lcard" onclick="openVocab()"><div class="lico ic2">📚</div><div class="linfo"><h3>Vocabulary</h3><p id="vocabLabel">Phrasal verbs</p></div><div class="ltime">~10м</div></div>
     <div class="lcard" onclick="openEx('listen')"><div class="lico ic3">🎧</div><div class="linfo"><h3>Listening</h3><p>Разговорные фразы</p></div><div class="ltime">~10м</div></div>
     <div class="lcard" onclick="openEx('grammar')"><div class="lico ic4">✏️</div><div class="linfo"><h3>Grammar</h3><p id="gramLabel">Tenses review</p></div><div class="ltime">~10м</div></div>
@@ -224,7 +219,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   <div class="ch-input-wrap" id="chatInputWrap" style="display:none">
     <div class="hints" id="chatHints"></div>
     <div class="ch-row">
-      <textarea class="ch-in" id="chatIn" placeholder="Type in English..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+      <textarea class="ch-in" id="chatIn" placeholder="Пиши по-английски или русски..." rows="1" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
       <button class="ibtn ibtn-m" id="micB" onclick="toggleMic()">🎤</button>
       <button class="ibtn ibtn-s" onclick="sendMsg()">↑</button>
     </div>
@@ -245,7 +240,7 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- STATS -->
 <div class="scr" id="scrStats">
-  <div class="hero"><h1>Your Progress</h1><p>Day <span id="statDay">1</span> of 90</p></div>
+  <div class="hero"><h1>Твой прогресс</h1><p>Day <span id="statDay">1</span> of 90</p></div>
   <div class="sg">
     <div class="sc"><div class="sv s-ac" id="stW">0</div><div class="sl">Слов изучено</div></div>
     <div class="sc"><div class="sv s-wm" id="stS">0</div><div class="sl">Дней подряд</div></div>
@@ -260,9 +255,9 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
 
 <!-- BOTTOM NAV -->
 <div class="bnav" id="bnav">
-  <div class="ni on" onclick="showScr('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>Home</div>
-  <div class="ni" onclick="openChat()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>Chat</div>
-  <div class="ni" onclick="showScr('stats')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Stats</div>
+  <div class="ni on" onclick="showScr('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>Главная</div>
+  <div class="ni" onclick="openChat()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>Чат</div>
+  <div class="ni" onclick="showScr('stats')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>Прогресс</div>
 </div>
 </div>
 
@@ -488,16 +483,16 @@ const GRAM_ALL = [
 
 // ===================== LISTENING (30 exercises) =====================
 const LISTEN_ALL = [
-  {t:"Wanna grab a bite? I know this awesome place downtown.",q:"What is suggested?",o:["Shopping","Eating out","Visit a friend","Going home"],a:1,tip:"'grab a bite' = перекусить"},
-  {t:"I'm gonna head out early. Got a ton of stuff to do.",q:"What will the speaker do?",o:["Stay late","Leave early","Take a nap","Call someone"],a:1,tip:"'head out' = уходить"},
-  {t:"Honestly, I couldn't care less about their opinion.",q:"How does the speaker feel?",o:["Very interested","Worried","Doesn't care","Angry"],a:2,tip:"'couldn't care less' = всё равно"},
-  {t:"Let me sleep on it and get back to you.",q:"What will happen?",o:["Sleep immediately","Think it over","Refuse","Ask someone else"],a:1,tip:"'sleep on it' = обдумать"},
-  {t:"You totally nailed that presentation!",q:"How was the presentation?",o:["Bad","Cancelled","Excellent","Average"],a:2,tip:"'nailed it' = отлично справился"},
-  {t:"I'm kind of on the fence about the new proposal.",q:"How does the speaker feel?",o:["Strongly supports","Undecided","Against it","Excited"],a:1,tip:"'on the fence' = в раздумьях"},
+  {t:"Wanna grab a bite? I know this awesome place downtown.",q:"Что предлагает говорящий?",o:["Shopping","Eating out","Visit a friend","Going home"],a:1,tip:"'grab a bite' = перекусить"},
+  {t:"I'm gonna head out early. Got a ton of stuff to do.",q:"Что собирается сделать?",o:["Stay late","Leave early","Take a nap","Call someone"],a:1,tip:"'head out' = уходить"},
+  {t:"Honestly, I couldn't care less about their opinion.",q:"Что чувствует говорящий?",o:["Very interested","Worried","Doesn't care","Angry"],a:2,tip:"'couldn't care less' = всё равно"},
+  {t:"Let me sleep on it and get back to you.",q:"Что произойдёт?",o:["Sleep immediately","Think it over","Refuse","Ask someone else"],a:1,tip:"'sleep on it' = обдумать"},
+  {t:"You totally nailed that presentation!",q:"Как прошла презентация?",o:["Bad","Cancelled","Excellent","Average"],a:2,tip:"'nailed it' = отлично справился"},
+  {t:"I'm kind of on the fence about the new proposal.",q:"Что чувствует говорящий?",o:["Strongly supports","Undecided","Against it","Excited"],a:1,tip:"'on the fence' = в раздумьях"},
   {t:"Can you keep it down? I'm trying to focus here.",q:"What is requested?",o:["Turn up volume","Be quieter","Leave the room","Help with work"],a:1,tip:"'keep it down' = потише"},
   {t:"She's been under a lot of pressure at work lately.",q:"What's happening?",o:["She's relaxed","She's stressed","She quit","She got promoted"],a:1,tip:"'under pressure' = под давлением"},
   {t:"That meeting was a total waste of time.",q:"Opinion about the meeting?",o:["Productive","Useless","Interesting","Short"],a:1,tip:"'waste of time' = пустая трата"},
-  {t:"I've got mixed feelings about moving abroad.",q:"How does the speaker feel?",o:["Very positive","Negative","Both positive and negative","Indifferent"],a:2,tip:"'mixed feelings' = двойственные чувства"},
+  {t:"I've got mixed feelings about moving abroad.",q:"Что чувствует говорящий?",o:["Very positive","Negative","Both positive and negative","Indifferent"],a:2,tip:"'mixed feelings' = двойственные чувства"},
   {t:"He's been blowing things out of proportion again.",q:"What is he doing?",o:["Exaggerating","Lying","Ignoring","Celebrating"],a:0,tip:"'blow out of proportion' = раздувать"},
   {t:"Fingers crossed we get the contract!",q:"What is the speaker expressing?",o:["Certainty","Hope","Doubt","Fear"],a:1,tip:"'fingers crossed' = надеюсь, скрещу пальцы"},
   {t:"Long story short, we missed the flight.",q:"What happened?",o:["Caught the flight","Missed the flight","Flight was cancelled","Changed plans"],a:1,tip:"'long story short' = короче говоря"},
@@ -663,15 +658,14 @@ function openChat(){
   startTm(20*60,document.getElementById('tmFill'),document.getElementById('tmTxt'));
   
   const starters=[
-    `Hey! Today's topic is "${topic.t}". ${topic.d}. Let's start — tell me, what comes to mind when you think about this?`,
-    `Hi there! Let's practice "${topic.t}" today. What's your experience with this topic?`,
-    `Good to see you! Ready to work on "${topic.t}"? Let's begin with a simple question — how does this topic relate to your daily life?`,
+    {en:"Hi! Let's talk about "+topic.t+" today. What comes to mind?",ru:"Привет! Давай поговорим о \""+topic.d+"\". Что приходит в голову?"},
+    {en:"Hey! Ready to practice "+topic.t+"? Tell me about your experience!",ru:"Готов практиковать \""+topic.d+"\"? Расскажи о своём опыте!"},
   ];
   setTimeout(()=>{
-    const msg=starters[Math.floor(Math.random()*starters.length)];
-    addBot(msg);
-    speak(msg);
-    setHints(["Well, I think...","In my experience...","That's interesting because..."]);
+    const s=starters[Math.floor(Math.random()*starters.length)];
+    addBot(s.en,'<div class="tr">🇷🇺 '+s.ru+'</div>');
+    speak(s.en);
+    setHints(["Well, I think...","For me...","Hmm, interesting..."]);;
   },600);
 }
 
@@ -707,16 +701,15 @@ async function sendMsg(){
   // Try AI API, fallback to local
   try{
     const topic=getTodayTopic();
-    const sysPrompt=`You are a friendly English conversation partner helping a Russian speaker practice spoken English. Today's topic: "${topic.t}" (${topic.d}).
+    const sysPrompt=`You are a friendly English tutor for a Russian speaker. Today's topic: "${topic.t}" (${topic.d}).
 
-Rules:
-1. Respond naturally in 2-4 sentences, like a real conversation
-2. If the user makes a grammar or vocabulary mistake, gently correct it in a separate line starting with "💡 Tip:"
-3. Ask a follow-up question to keep the conversation going
-4. Sometimes teach a new useful word or phrase, marking it with [NEW: word - meaning]
-5. Keep your language at B1-B2 level
-6. Be encouraging and supportive
-7. Mix topics naturally — don't be robotic`;
+RULES:
+1. Reply in English (2-3 simple sentences, B1 level)
+2. ALWAYS add next line: 🇷🇺 [full Russian translation of your English]
+3. If user made mistake: 💡 Tip: [explain in RUSSIAN + show correct English]
+4. If user wrote in Russian: 🔄 По-английски: "[English translation]"
+5. Sometimes add: 📚 Полезная фраза: "phrase" = перевод
+6. Simple words. Be warm. Praise their efforts.`;
 
     const messages=S.chatH.slice(-10);
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
@@ -734,20 +727,19 @@ Rules:
     
     if(data.content&&data.content[0]){
       let reply=data.content.map(c=>c.text||'').join('\n').trim();
-      // Parse corrections and new words
+      // Parse response with Russian
       let extra='';
-      const tipMatch=reply.match(/💡\s*Tip:?\s*(.+?)(?:\n|$)/i);
-      if(tipMatch){
-        extra=`<div class="corr">💡 <b>Tip:</b> ${tipMatch[1]}</div>`;
-        reply=reply.replace(tipMatch[0],'').trim();
-      }
-      const nwMatch=reply.match(/\[NEW:\s*(.+?)\s*-\s*(.+?)\]/i);
-      if(nwMatch){
-        reply=reply.replace(nwMatch[0],`<span class="nw" title="${nwMatch[2]}">${nwMatch[1]}</span>`);
-      }
-      addBot(reply,extra);
+      const ruM=reply.match(/🇷🇺\s*(.+?)(?=\n💡|\n📚|\n🔄|$)/s);
+      if(ruM){extra+='<div class="tr">🇷🇺 '+ruM[1].trim()+'</div>';reply=reply.replace(ruM[0],'').trim()}
+      const tipM=reply.match(/💡\s*Tip:?\s*(.+?)(?=\n📚|\n🔄|$)/s);
+      if(tipM){extra+='<div class="corr">💡 '+tipM[1].trim()+'</div>';reply=reply.replace(tipM[0],'').trim()}
+      const phM=reply.match(/📚\s*(.+?)(?=\n|$)/s);
+      if(phM){extra+='<div class="ru-help"><b>📚</b> '+phM[1].trim()+'</div>';reply=reply.replace(phM[0],'').trim()}
+      const hlpM=reply.match(/🔄\s*(.+?)(?=\n|$)/s);
+      if(hlpM){extra+='<div class="ru-help"><b>🔄</b> '+hlpM[1].trim()+'</div>';reply=reply.replace(hlpM[0],'').trim()}
+      addBot(reply.trim(),extra);
       speak(reply.replace(/<[^>]+>/g,''));
-      setHints(["I agree, and...","That's a good point, but...","Could you explain more about..."]);
+      setHints(["I think...","Well...","That's interesting..."]);;
     } else { throw new Error('No content'); }
   } catch(e){
     rmTyp();
@@ -755,17 +747,15 @@ Rules:
     const corr=checkGram(txt);
     let extra=corr?`<div class="corr">💡 <b>Tip:</b> ${corr}</div>`:'';
     const fb=[
-      "That's interesting! Can you tell me more about that?",
-      "Good point! What made you think that way?",
-      "I see what you mean. Have you always felt like that?",
-      "Nice! And how did that work out?",
-      "Cool! What would you do differently next time?",
-      "That's a great perspective! Do you think most people would agree?",
-      "Interesting! Have you ever tried the opposite approach?",
+      {en:"That's interesting! Tell me more?",ru:"Интересно! Расскажи ещё?"},
+      {en:"Good point! Why do you think so?",ru:"Хорошая мысль! Почему так думаешь?"},
+      {en:"I see! How did that work out?",ru:"Понятно! Как всё прошло?"},
+      {en:"Nice! What would you change?",ru:"Круто! Что бы изменил?"},
     ];
     const r=fb[Math.floor(Math.random()*fb.length)];
-    addBot(r,extra);speak(r);
-    setHints(["Well, honestly...","I'd say that...","Let me think..."]);
+    extra='<div class="tr">🇷🇺 '+r.ru+'</div>'+extra;
+    addBot(r.en,extra);speak(r.en);
+    setHints(["Well, I think...","Actually...","Let me explain..."]);;
   }
 }
 
@@ -820,12 +810,12 @@ function renderV(){
   const area=document.getElementById('vocabArea');
   const set=getTodayVocab();
   if(vIdx>=set.length){
-    area.innerHTML=`<div style="text-align:center;padding:36px 16px"><div style="font-size:42px;margin-bottom:14px">🎉</div><h2 style="font-family:var(--fd);margin-bottom:6px">All done!</h2><p style="color:var(--t2);margin-bottom:20px;font-size:13px">You reviewed ${set.length} words today</p><button class="bnxt" onclick="goHome()">Back to Home</button></div>`;
+    area.innerHTML=`<div style="text-align:center;padding:36px 16px"><div style="font-size:42px;margin-bottom:14px">🎉</div><h2 style="font-family:var(--fd);margin-bottom:6px">Все пройдены!</h2><p style="color:var(--t2);margin-bottom:20px;font-size:13px">You reviewed ${set.length} words today</p><button class="bnxt" onclick="goHome()">На главную</button></div>`;
     S.dayDone++;S.exDone++;save();return;
   }
   const v=set[vIdx];vRevealed=false;
   area.innerHTML=`<div class="vcnt">${vIdx+1}/${set.length}</div>
-    <div class="vc" onclick="revV()"><h2>${v.w}</h2>${v.p?`<div class="ph">${v.p}</div>`:''}<div id="vH" style="display:none"><div class="mn">${v.m}</div><div class="ex">"${v.ex}"</div></div><div class="th" id="vTap">tap to reveal</div></div>
+    <div class="vc" onclick="revV()"><h2>${v.w}</h2>${v.p?`<div class="ph">${v.p}</div>`:''}<div id="vH" style="display:none"><div class="mn">${v.m}</div><div class="ex">"${v.ex}"</div></div><div class="th" id="vTap">нажми для ответа</div></div>
     <div class="va" id="vAct" style="display:none"><button class="vb l" onclick="vNext(0)">🔄 Ещё учу</button><button class="vb k" onclick="vNext(1)">✅ Знаю</button></div>
     <div style="text-align:center;margin-top:10px"><button class="ibtn ibtn-m" onclick="speak('${v.w.replace(/'/g,"\\'")}. ${v.ex.replace(/'/g,"\\'")}')" style="display:inline-flex;width:auto;padding:7px 14px;gap:5px;font-size:12px;border-radius:8px">🔊 Listen</button></div>`;
 }
@@ -840,7 +830,7 @@ function openEx(type){
   if(type==='listen'){
     curEx=shuf([...LISTEN_ALL]).slice(0,5);
     document.getElementById('exTtl').textContent='Listening';
-    document.getElementById('exSub').textContent='Understand real speech';
+    document.getElementById('exSub').textContent='Пойми что говорят';
   }else if(type==='grammar'){
     const lvl=week<=4?GRAM_ALL.slice(0,10):week<=8?GRAM_ALL.slice(5,20):GRAM_ALL.slice(10,30);
     curEx=shuf([...lvl]).slice(0,5);
@@ -857,15 +847,15 @@ function openEx(type){
 function renderEx(){
   const area=document.getElementById('exArea');
   if(eIdx>=curEx.length){
-    area.innerHTML=`<div style="text-align:center;padding:36px 16px"><div style="font-size:42px;margin-bottom:14px">🏆</div><h2 style="font-family:var(--fd);margin-bottom:6px">Session Complete!</h2><p style="color:var(--t2);margin-bottom:20px;font-size:13px">Great work today</p><button class="bnxt" onclick="goHome()">Back to Home</button></div>`;
+    area.innerHTML=`<div style="text-align:center;padding:36px 16px"><div style="font-size:42px;margin-bottom:14px">🏆</div><h2 style="font-family:var(--fd);margin-bottom:6px">Готово!</h2><p style="color:var(--t2);margin-bottom:20px;font-size:13px">Молодец!</p><button class="bnxt" onclick="goHome()">На главную</button></div>`;
     S.dayDone++;S.exDone++;save();return;
   }
   const ex=curEx[eIdx];
   if(eType==='listen'){
-    area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-l">🎧 Listening</span><h2>Listen and answer</h2><p style="margin-top:6px">"${ex.t}"</p><button class="ibtn ibtn-m" onclick="speak('${ex.t.replace(/'/g,"\\'")}')" style="display:inline-flex;width:auto;padding:7px 14px;gap:5px;font-size:12px;border-radius:8px;margin-top:10px">🔊 Play</button></div><p style="font-size:13px;margin-bottom:10px;color:var(--t2)">${ex.q}</p><div class="ex-opts">${ex.o.map((o,i)=>`<div class="ex-o" onclick="chkAns(this,${i},${ex.a})"><span class="ol">${'ABCD'[i]}</span>${o}</div>`).join('')}</div><div id="eFb"></div>`;
+    area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-l">🎧 Listening</span><h2>Послушай и ответь</h2><p style="margin-top:6px">"${ex.t}"</p><button class="ibtn ibtn-m" onclick="speak('${ex.t.replace(/'/g,"\\'")}')" style="display:inline-flex;width:auto;padding:7px 14px;gap:5px;font-size:12px;border-radius:8px;margin-top:10px">🔊 Play</button></div><p style="font-size:13px;margin-bottom:10px;color:var(--t2)">${ex.q}</p><div class="ex-opts">${ex.o.map((o,i)=>`<div class="ex-o" onclick="chkAns(this,${i},${ex.a})"><span class="ol">${'ABCD'[i]}</span>${o}</div>`).join('')}</div><div id="eFb"></div>`;
     speak(ex.t);
   }else if(eType==='grammar'){
-    area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-g">✏️ Grammar</span><h2>Fill in the blank</h2><p style="font-size:15px;margin-top:6px;color:var(--t1)">${ex.q}</p></div><div class="ex-opts">${ex.o.map((o,i)=>`<div class="ex-o" onclick="chkAns(this,${i},${ex.a})"><span class="ol">${'ABCD'[i]}</span>${o}</div>`).join('')}</div><div id="eFb"></div>`;
+    area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-g">✏️ Grammar</span><h2>Заполни пропуск</h2><p style="font-size:15px;margin-top:6px;color:var(--t1)">${ex.q}</p></div><div class="ex-opts">${ex.o.map((o,i)=>`<div class="ex-o" onclick="chkAns(this,${i},${ex.a})"><span class="ol">${'ABCD'[i]}</span>${o}</div>`).join('')}</div><div id="eFb"></div>`;
   }else{
     area.innerHTML=`<div class="vcnt">${eIdx+1}/${curEx.length}</div><div class="ex-pr"><span class="tbg tbg-s">🎭 Scenario</span><h2>${ex.s}</h2><p style="margin-top:6px">${ex.p}</p></div><div style="margin-bottom:10px"><p style="font-size:11px;color:var(--t3);margin-bottom:6px">💡 Hints:</p><div style="display:flex;flex-wrap:wrap;gap:5px">${ex.h.map(h=>`<span style="background:var(--s1);border:1px solid var(--brd);padding:5px 10px;border-radius:7px;font-size:12px;color:var(--t2)">${h}</span>`).join('')}</div></div><textarea class="ch-in" id="scIn" placeholder="Write your response..." rows="3" style="width:100%;margin-bottom:10px"></textarea><div style="display:flex;gap:6px"><button class="ibtn ibtn-m" id="scMic" onclick="togScMic()" style="width:auto;padding:8px 14px;gap:5px;font-size:12px;display:inline-flex">🎤 Speak</button><button class="bnxt" onclick="subSc()" style="flex:1">Submit</button></div><div id="eFb"></div>`;
   }
@@ -877,18 +867,18 @@ function chkAns(el,sel,cor){
   const tip=eType==='listen'?ex.tip:ex.e;
   if(sel===cor){
     el.classList.add('ok');
-    document.getElementById('eFb').innerHTML=`<div class="ex-fb fb-ok">✅ Correct!<br>📖 ${tip}</div><button class="bnxt" onclick="nxtEx()">Next →</button>`;
+    document.getElementById('eFb').innerHTML=`<div class="ex-fb fb-ok">✅ Correct!<br>📖 ${tip}</div><button class="bnxt" onclick="nxtEx()">Дальше →</button>`;
   }else{
     el.classList.add('no');
     el.parentElement.children[cor].classList.add('ok');
-    document.getElementById('eFb').innerHTML=`<div class="ex-fb fb-no">❌ Correct answer: ${ex.o[cor]}<br>📖 ${tip}</div><button class="bnxt" onclick="nxtEx()">Next →</button>`;
+    document.getElementById('eFb').innerHTML=`<div class="ex-fb fb-no">❌ Correct answer: ${ex.o[cor]}<br>📖 ${tip}</div><button class="bnxt" onclick="nxtEx()">Дальше →</button>`;
   }
 }
 
 function subSc(){
   const t=document.getElementById('scIn').value.trim();if(!t)return;
   const c=checkGram(t);
-  let fb=`<div class="ex-fb fb-ok">✅ Good job! ${c?'<br>💡 '+c:'Your English looks solid here!'}<br><br>📌 Useful phrases: "${curEx[eIdx].h.join('", "')}"</div><button class="bnxt" onclick="nxtEx()">Next →</button>`;
+  let fb=`<div class="ex-fb fb-ok">✅ Good job! ${c?'<br>💡 '+c:'Your English looks solid here!'}<br><br>📌 Useful phrases: "${curEx[eIdx].h.join('", "')}"</div><button class="bnxt" onclick="nxtEx()">Дальше →</button>`;
   document.getElementById('eFb').innerHTML=fb;
 }
 
@@ -910,9 +900,7 @@ function nxtEx(){eIdx++;renderEx()}
 function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 if('speechSynthesis'in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices()}
-
-// Register PWA Service Worker
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(e=>console.log('SW error',e))}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(e=>console.log('SW',e))}
 </script>
 </body>
 </html>
